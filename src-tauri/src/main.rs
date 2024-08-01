@@ -6,11 +6,6 @@ mod supabase_client;
 use supabase_client::initialize_client;
 
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}!", name)
-}
-
-#[tauri::command]
 async fn supabase_test() -> Result<String, String> {
     dotenv::dotenv().ok();
 
@@ -31,7 +26,7 @@ async fn supabase_test() -> Result<String, String> {
 fn main() {
     tauri::Builder
         ::default()
-        .invoke_handler(tauri::generate_handler![greet, supabase_test])
+        .invoke_handler(tauri::generate_handler![supabase_test])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

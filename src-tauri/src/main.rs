@@ -62,7 +62,7 @@ async fn get_pokemon(pokemon_id: &str) -> Result<String, String> {
     let response = client
         .from("pokemon")
         .select("name, sprites")
-        .eq("pokedex_id", pokemon_id)
+        .eq("pokemon_id", pokemon_id)
         .single()
         .execute().await
         .map_err(|e| e.to_string())?;

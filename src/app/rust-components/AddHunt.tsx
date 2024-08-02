@@ -8,7 +8,7 @@ const AddHuntButton = () => {
     try {
       await invoke<string>(RustFunctions.AddHunt, {
         userId: "814acd2f-e7d0-474e-a956-91dc334b748f",
-        pokemonId: "1",
+        pokemonId: "246",
       });
     } catch (error) {
       console.error(error);

@@ -106,6 +106,22 @@ async fn add_new_hunt(user_id: &str, pokemon_id: &str) -> Result<String, String>
 }
 
 #[tauri::command]
+async fn get_current_count(hunt_id: &str) -> Result<String, String> {
+    let client = initialize_client();
+
+    let count = client
+        .from("hunts")
+        .select("count")
+        .eq("id", hunt_id)
+        .execute().await
+        .map_err(|e| e.to_string())?;
+
+    let body = count.text().await.map_err(|e| e.to_string())?;
+
+    Ok(body)
+}
+
+#[tauri::command]
 async fn update_count(hunt_id: &str, count: &str, increment: bool) -> Result<String, String> {
     let client = initialize_client();
 
@@ -157,6 +173,7 @@ fn main() {
             tauri::generate_handler![
                 supabase_test,
                 add_new_hunt,
+                get_current_count,
                 update_count,
                 get_pokemon_list,
                 get_pokemon

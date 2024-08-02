@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use dotenv;
 use serde_json::json;
-
+use tauri_plugin_oauth;
 mod supabase_client;
 use supabase_client::initialize_client;
 
@@ -168,9 +168,11 @@ async fn update_count(hunt_id: &str, count: &str, increment: bool) -> Result<Str
 
     Ok(body)
 }
+
 fn main() {
     tauri::Builder
         ::default()
+        .plugin(tauri_plugin_oauth::init())
         .invoke_handler(
             tauri::generate_handler![
                 supabase_test,

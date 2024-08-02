@@ -17,14 +17,14 @@ tauri-build = { version = "1.5.3", features = [] }
 [dependencies]
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.7.0", features = [] }
+tauri = { version = "1.7.0", features = [ "dialog-confirm", "dialog-ask", "shell-open", "dialog-message"] }
 postgres = "0.19.8"
 postgrest = "1.6.0"
 dotenv = "0.15.0"
 jsonwebtoken = "8.0"
 chrono = "0.4.38"
 tauri-plugin-deep-link = "0.1.2"
-
+tauri-plugin-oauth = "=0.0.0-alpha.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem and the built-in dev server is disabled.

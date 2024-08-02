@@ -6,6 +6,8 @@ use serde_json::json;
 mod supabase_client;
 use supabase_client::initialize_client;
 
+// TODO: Create function to dump count to text file.
+
 #[tauri::command]
 async fn supabase_test() -> Result<String, String> {
     dotenv::dotenv().ok();

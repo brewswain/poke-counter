@@ -17,10 +17,9 @@ const AddHuntButton = () => {
       if (user && session) {
         const res = await invoke<string>(RustFunctions.AddHunt, {
           userId: user.id,
-          pokemonId: "246",
+          pokemonId: "5",
           accessToken: session.access_token,
         });
-        console.log({ res: JSON.parse(res) });
       } else {
         console.error("User not authenticated");
       }

@@ -5,26 +5,53 @@ import { useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
 import { useCountStore } from "@/store/countStore";
+import supabase from "../utils/supabase";
 
-const Count = () => {
+const Count = ({
+  initial_count,
+  huntId,
+}: {
+  initial_count: number;
+  huntId: string;
+}) => {
   const { count, setCount } = useCountStore();
 
-  useEffect(() => {
-    invoke<string>(RustFunctions.GetCount, {
-      huntId: "050f5fe8-dfb4-4adb-a380-bae8c765ebe2",
-    })
-      .then((result) => {
-        const data = JSON.parse(result);
-        const updated_count = data[0].count;
+  const fetchData = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-        if (!isNaN(updated_count)) {
-          setCount(updated_count);
-        }
-      })
-      .catch(console.error);
+    try {
+      if (session) {
+        invoke<string>(RustFunctions.GetCount, {
+          huntId,
+          accessToken: session.access_token,
+        })
+          .then((result) => {
+            console.log({ result });
+            const data = JSON.parse(result);
+            const updated_count = data[0].count;
+
+            if (!isNaN(updated_count)) {
+              setCount(updated_count);
+            }
+          })
+          .catch(console.error);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    return () => {
+      setCount(0);
+    };
   }, []);
 
-  return <div>{count}</div>;
+  return <div className="text-black">Count: {count}</div>;
 };
 
 export default Count;

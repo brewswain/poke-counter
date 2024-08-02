@@ -56,13 +56,13 @@ async fn get_pokemon_list() -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn get_pokemon(pokedex_id: &str) -> Result<String, String> {
+async fn get_pokemon(pokemon_id: &str) -> Result<String, String> {
     let client = initialize_client();
 
     let response = client
         .from("pokemon")
         .select("name, sprites")
-        .eq("pokedex_id", pokedex_id)
+        .eq("pokedex_id", pokemon_id)
         .single()
         .execute().await
         .map_err(|e| e.to_string())?;
@@ -81,6 +81,22 @@ async fn get_pokemon(pokedex_id: &str) -> Result<String, String> {
     });
 
     Ok(serde_json::to_string(&formatted_pokemon).map_err(|e| e.to_string())?)
+}
+
+#[tauri::command]
+async fn get_available_hunts(access_token: &str) -> Result<String, String> {
+    let client = initialize_client();
+
+    let response = client
+        .from("hunts")
+        .auth(access_token)
+        .select("*")
+        .execute().await
+        .map_err(|e| e.to_string())?;
+
+    let body = response.text().await.map_err(|e| e.to_string())?;
+
+    Ok(body)
 }
 
 #[tauri::command]
@@ -113,11 +129,12 @@ async fn add_new_hunt(
 }
 
 #[tauri::command]
-async fn get_current_count(hunt_id: &str) -> Result<String, String> {
+async fn get_current_count(hunt_id: &str, access_token: &str) -> Result<String, String> {
     let client = initialize_client();
 
     let count = client
         .from("hunts")
+        .auth(access_token)
         .select("count")
         .eq("id", hunt_id)
         .execute().await
@@ -183,6 +200,7 @@ fn main() {
                 supabase_test,
                 add_new_hunt,
                 get_current_count,
+                get_available_hunts,
                 update_count,
                 get_pokemon_list,
                 get_pokemon

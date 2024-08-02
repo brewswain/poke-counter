@@ -84,7 +84,11 @@ async fn get_pokemon(pokedex_id: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn add_new_hunt(user_id: &str, pokemon_id: &str) -> Result<String, String> {
+async fn add_new_hunt(
+    user_id: &str,
+    pokemon_id: &str,
+    access_token: &str
+) -> Result<String, String> {
     let client = initialize_client();
 
     let json_value =
@@ -98,6 +102,7 @@ async fn add_new_hunt(user_id: &str, pokemon_id: &str) -> Result<String, String>
 
     let response = client
         .from("hunts")
+        .auth(access_token)
         .insert(json_string)
         .execute().await
         .map_err(|e| e.to_string())?;

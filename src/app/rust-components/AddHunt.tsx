@@ -2,14 +2,28 @@
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
+import supabase from "../utils/supabase";
 
 const AddHuntButton = () => {
   const handleClick = async () => {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     try {
-      await invoke<string>(RustFunctions.AddHunt, {
-        userId: "814acd2f-e7d0-474e-a956-91dc334b748f",
-        pokemonId: "246",
-      });
+      if (user && session) {
+        const res = await invoke<string>(RustFunctions.AddHunt, {
+          userId: user.id,
+          pokemonId: "246",
+          accessToken: session.access_token,
+        });
+        console.log({ res: JSON.parse(res) });
+      } else {
+        console.error("User not authenticated");
+      }
     } catch (error) {
       console.error(error);
     }

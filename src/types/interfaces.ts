@@ -15,4 +15,5 @@ export interface CountChangeProps {
 export interface SearchPokemon {
   name: string;
   sprite: string;
+  pokemon_id: string;
 }

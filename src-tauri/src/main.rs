@@ -30,7 +30,7 @@ async fn get_pokemon_list() -> Result<String, String> {
 
     let response = client
         .from("pokemon")
-        .select("name, sprites")
+        .select("pokemon_id, name, sprites")
         .execute().await
         .map_err(|e| e.to_string())?;
 
@@ -39,21 +39,22 @@ async fn get_pokemon_list() -> Result<String, String> {
     let parsed: Vec<serde_json::Value> = serde_json::from_str(&body).map_err(|e| e.to_string())?;
 
     let mut formatted_list: Vec<serde_json::Value> = parsed
-        .into_iter()
-        .map(|pokemon| {
-            let name = pokemon["name"].as_str().unwrap_or("Unknown");
-            let sprites = &pokemon["sprites"];
-            let chosen_sprite = sprites["front_default"].as_str().unwrap_or("");
+    .into_iter()
+    .map(|pokemon| {
+        let pokemon_id = pokemon["pokemon_id"].as_i64().map(|id| id.to_string()).unwrap_or_else(|| "Unknown".to_string());
+        let name = pokemon["name"].as_str().unwrap_or("Unknown");
+        let sprites = &pokemon["sprites"];
+        let chosen_sprite = sprites["front_default"].as_str().unwrap_or("");
 
-            json!({
+        json!({
+            "pokemon_id": pokemon_id,
             "name": name,
             "sprite": chosen_sprite
         })
-        })
-        .collect();
+    })
+    .collect();
 
-       // Sort the formatted_list based on the "name" field
-       formatted_list.sort_by(|a, b| {
+    formatted_list.sort_by(|a, b| {
         let name_a = a["name"].as_str().unwrap_or("").to_lowercase();
         let name_b = b["name"].as_str().unwrap_or("").to_lowercase();
         name_a.cmp(&name_b)
@@ -61,6 +62,7 @@ async fn get_pokemon_list() -> Result<String, String> {
 
     Ok(serde_json::to_string(&formatted_list).map_err(|e| e.to_string())?)
 }
+
 
 #[tauri::command]
 async fn get_pokemon(pokemon_id: &str) -> Result<String, String> {

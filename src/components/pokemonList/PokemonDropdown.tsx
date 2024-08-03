@@ -80,6 +80,7 @@ const PokemonDropdown = () => {
   }, []);
 
   const handlePokemonSelect = (pokemon: SearchPokemon) => {
+    console.log(pokemon);
     setSearchQuery(pokemon.name);
     addSelectedPokemon(pokemon);
     setIsOpen(false);

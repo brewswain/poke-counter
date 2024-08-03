@@ -26,7 +26,7 @@ export const useSearchStore = create<SearchState>((set) => ({
   setFilteredResults: (results) => set({ filteredResults: results }),
   fuse: null,
   setFuse: (fuse) => set({ fuse }),
-  selectedPokemon: { name: "", sprite: "" },
+  selectedPokemon: { name: "", sprite: "", pokemon_id: "" },
   addSelectedPokemon: (pokemon) =>
     set({
       selectedPokemon: pokemon,

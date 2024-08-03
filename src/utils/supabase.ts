@@ -10,7 +10,7 @@ const supabase = createClient(
       storage: window.localStorage,
       flowType: "pkce",
     },
-  }
+  },
 );
 
 export default supabase;

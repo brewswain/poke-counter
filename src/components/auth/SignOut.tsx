@@ -1,6 +1,7 @@
 "use client";
 
 import supabase from "@/utils/supabase";
+
 import { useRouter } from "next/navigation";
 
 const SignOut = () => {

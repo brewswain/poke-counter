@@ -1,8 +1,9 @@
 "use client";
 
-import { invoke } from "@tauri-apps/api/tauri";
-import { RustFunctions } from "./enums";
 import supabase from "@/utils/supabase";
+import { invoke } from "@tauri-apps/api/tauri";
+
+import { RustFunctions } from "./enums";
 
 const AddHuntButton = () => {
   const handleClick = async () => {

@@ -1,7 +1,9 @@
+import { Hunt } from "@/types/interfaces";
+
+import { useRouter } from "next/navigation";
+
 import Count from "@/rust-components/Count";
 import PokemonDetails from "@/rust-components/PokemonDetails";
-import { Hunt } from "@/types/interfaces";
-import { useRouter } from "next/navigation";
 
 const HuntCard = ({ hunt }: { hunt: Hunt }) => {
   const router = useRouter();

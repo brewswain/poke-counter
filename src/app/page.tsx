@@ -1,12 +1,13 @@
 "use client";
 
+import { AuthSession } from "@supabase/supabase-js";
+
 import { useEffect, useState } from "react";
 
-import { AuthSession } from "@supabase/supabase-js";
-import Auth from "./Auth";
-import supabase from "../utils/supabase";
-
 import { useRouter } from "next/navigation";
+
+import supabase from "../utils/supabase";
+import Auth from "./Auth";
 
 export default function Home() {
   const [session, setSession] = useState<AuthSession | null>(null);

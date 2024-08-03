@@ -1,5 +1,6 @@
 import SignOut from "@/components/auth/SignOut";
 import PokemonDropdown from "@/components/pokemonList/PokemonDropdown";
+
 import AvailableHunts from "@/rust-components/AvailableHunts";
 
 const HuntsList = () => {

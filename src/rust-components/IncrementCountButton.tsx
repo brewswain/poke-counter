@@ -1,10 +1,11 @@
 "use client";
 
-import { invoke } from "@tauri-apps/api/tauri";
-import { RustFunctions } from "./enums";
 import { useCountStore } from "@/store/countStore";
 import { CountChangeProps } from "@/types/interfaces";
 import supabase from "@/utils/supabase";
+import { invoke } from "@tauri-apps/api/tauri";
+
+import { RustFunctions } from "./enums";
 
 const IncrementCountButton = ({ huntId }: CountChangeProps) => {
   const { increment, incrementAmount, decrement } = useCountStore();

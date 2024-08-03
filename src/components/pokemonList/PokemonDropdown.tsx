@@ -1,6 +1,13 @@
 "use client";
 
+import { useSearchStore } from "@/store/searchStore";
+import { SearchPokemon } from "@/types/interfaces";
+import { Cross1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { invoke } from "@tauri-apps/api/tauri";
+
 import { useEffect } from "react";
+
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -10,12 +17,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { useSearchStore } from "@/store/searchStore";
-import { MagnifyingGlassIcon, Cross1Icon } from "@radix-ui/react-icons";
-import { invoke } from "@tauri-apps/api/tauri";
+
 import { RustFunctions } from "@/rust-components/enums";
-import { SearchPokemon } from "@/types/interfaces";
 
 const PokemonDropdown = () => {
   const {

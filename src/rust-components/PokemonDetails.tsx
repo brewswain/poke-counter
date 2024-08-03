@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-
 import { invoke } from "@tauri-apps/api/tauri";
+
+import { useEffect, useState } from "react";
+
 import { RustFunctions } from "./enums";
 
 const PokemonDetails = ({ pokemonId }: { pokemonId: string }) => {

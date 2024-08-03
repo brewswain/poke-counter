@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
-
-import { invoke } from "@tauri-apps/api/tauri";
-import { RustFunctions } from "./enums";
 import { useCountStore } from "@/store/countStore";
 import supabase from "@/utils/supabase";
+import { invoke } from "@tauri-apps/api/tauri";
+
+import { useEffect } from "react";
+
+import { RustFunctions } from "./enums";
 
 const Count = ({ huntId }: { initial_count: number; huntId: string }) => {
   const { count, setCount } = useCountStore();

@@ -107,6 +107,7 @@ const SelectLabel = React.forwardRef<
     ref={ref}
     className={cn("py-1.5 pl-8 pr-2 text-sm font-semibold", className)}
     {...props}
+    onKeyDown={(e) => e.preventDefault()}
   />
 ));
 SelectLabel.displayName = SelectPrimitive.Label.displayName;
@@ -122,6 +123,7 @@ const SelectItem = React.forwardRef<
       className,
     )}
     {...props}
+    onKeyDown={(e) => e.preventDefault()}
   >
     <span className="absolute left-2 flex h-3.5 w-3.5 items-center justify-center">
       <SelectPrimitive.ItemIndicator>
@@ -129,7 +131,9 @@ const SelectItem = React.forwardRef<
       </SelectPrimitive.ItemIndicator>
     </span>
 
-    <SelectPrimitive.ItemText>{children}</SelectPrimitive.ItemText>
+    <SelectPrimitive.ItemText onKeyDown={(e) => e.preventDefault()}>
+      {children}
+    </SelectPrimitive.ItemText>
   </SelectPrimitive.Item>
 ));
 SelectItem.displayName = SelectPrimitive.Item.displayName;

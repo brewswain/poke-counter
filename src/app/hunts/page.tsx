@@ -1,9 +1,36 @@
+"use client";
+
+import { useSearchStore } from "@/store/searchStore";
+import { SearchPokemon } from "@/types/interfaces";
+import { invoke } from "@tauri-apps/api";
+
+import { useEffect } from "react";
+
 import SignOut from "@/components/auth/SignOut";
 import PokemonDropdown from "@/components/pokemonList/PokemonDropdown";
 
 import AvailableHunts from "@/rust-components/AvailableHunts";
+import { RustFunctions } from "@/rust-components/enums";
 
 const HuntsList = () => {
+  const { clearSearchQuery, pokemonList, setPokemonList } = useSearchStore();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await invoke<string>(RustFunctions.GetPokemonList);
+      const data: SearchPokemon[] = JSON.parse(response);
+      setPokemonList(data);
+    };
+
+    if (!pokemonList || pokemonList.length === 0) {
+      fetchData();
+    }
+
+    () => {
+      clearSearchQuery();
+    };
+  }, []);
+
   return (
     <main className="min-h-dvh bg-slate-500 px-4">
       <div className="flex w-full justify-center">

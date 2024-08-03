@@ -5,6 +5,7 @@ import { SearchPokemon } from "@/types/interfaces";
 import { Cross1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
 import { invoke } from "@tauri-apps/api/tauri";
 import Fuse from "fuse.js";
+import { FixedSizeList as List } from "react-window";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -20,6 +21,8 @@ import {
 } from "@/components/ui/select";
 
 import { RustFunctions } from "@/rust-components/enums";
+
+import { SearchInput } from "./SearchInput";
 
 const PokemonDropdown = () => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -80,10 +83,28 @@ const PokemonDropdown = () => {
   }, []);
 
   const handlePokemonSelect = (pokemon: SearchPokemon) => {
-    console.log(pokemon);
     setSearchQuery(pokemon.name);
     addSelectedPokemon(pokemon);
     setIsOpen(false);
+  };
+
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const pokemon = filteredResults[index];
+    return (
+      <li
+        style={style}
+        className="px-3 py-2 hover:bg-slate-100 list-none cursor-pointer capitalize "
+        onClick={() => handlePokemonSelect(pokemon)}
+      >
+        {pokemon.name}
+      </li>
+    );
   };
 
   return (
@@ -105,34 +126,15 @@ const PokemonDropdown = () => {
       </button>
       {isOpen && (
         <div className="absolute z-10 w-full mt-1 bg-white border border-slate-200 rounded-md shadow-lg">
-          <div className="relative p-2">
-            <MagnifyingGlassIcon className="absolute left-4 top-1/2 -translate-y-1/2 transform" />
-            <input
-              className="w-full pl-8 pr-8 py-2 text-sm border border-slate-200 rounded-md focus:outline-none focus:ring-2 focus:ring-slate-950"
-              placeholder="Search for pokémon"
-              onChange={(e) => setSearchQuery(e.target.value)}
-              value={searchQuery}
-            />
-            {searchQuery.length > 0 && (
-              <Cross1Icon
-                className="absolute right-4 top-1/2 -translate-y-1/2 transform cursor-pointer"
-                onClick={() => clearSearchQuery()}
-              />
-            )}
-          </div>
-          <ul className="max-h-60 overflow-auto py-1">
-            {filteredResults.map((pokemon) => (
-              <li
-                key={pokemon.name}
-                className="px-3 py-2 hover:bg-slate-100 cursor-pointer capitalize"
-                onClick={() => {
-                  handlePokemonSelect(pokemon);
-                }}
-              >
-                {pokemon.name}
-              </li>
-            ))}
-          </ul>
+          <SearchInput />
+          <List
+            height={200}
+            itemCount={filteredResults.length}
+            itemSize={35}
+            width="100%"
+          >
+            {Row}
+          </List>
         </div>
       )}
     </div>

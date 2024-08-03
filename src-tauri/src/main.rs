@@ -38,7 +38,7 @@ async fn get_pokemon_list() -> Result<String, String> {
 
     let parsed: Vec<serde_json::Value> = serde_json::from_str(&body).map_err(|e| e.to_string())?;
 
-    let formatted_list: Vec<serde_json::Value> = parsed
+    let mut formatted_list: Vec<serde_json::Value> = parsed
         .into_iter()
         .map(|pokemon| {
             let name = pokemon["name"].as_str().unwrap_or("Unknown");
@@ -51,6 +51,13 @@ async fn get_pokemon_list() -> Result<String, String> {
         })
         })
         .collect();
+
+       // Sort the formatted_list based on the "name" field
+       formatted_list.sort_by(|a, b| {
+        let name_a = a["name"].as_str().unwrap_or("").to_lowercase();
+        let name_b = b["name"].as_str().unwrap_or("").to_lowercase();
+        name_a.cmp(&name_b)
+    });
 
     Ok(serde_json::to_string(&formatted_list).map_err(|e| e.to_string())?)
 }

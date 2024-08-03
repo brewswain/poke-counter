@@ -146,11 +146,17 @@ async fn get_current_count(hunt_id: &str, access_token: &str) -> Result<String, 
 }
 
 #[tauri::command]
-async fn update_count(hunt_id: &str, count: &str, increment: bool) -> Result<String, String> {
+async fn update_count(
+    hunt_id: &str,
+    count: &str,
+    increment: bool,
+    access_token: &str
+) -> Result<String, String> {
     let client = initialize_client();
 
     let mut existing_count: i32 = client
         .from("hunts")
+        .auth(access_token)
         .select("count")
         .eq("id", hunt_id)
         .execute().await
@@ -181,6 +187,7 @@ async fn update_count(hunt_id: &str, count: &str, increment: bool) -> Result<Str
 
     let response = client
         .from("hunts")
+        .auth(access_token)
         .update(json_string)
         .eq("id", hunt_id)
         .execute().await

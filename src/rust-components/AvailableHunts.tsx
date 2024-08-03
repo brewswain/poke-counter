@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
-import supabase from "../utils/supabase";
-import HuntCard from "../components/hunts/HuntCard";
-import { Hunt } from "../types/interfaces";
+import HuntCard from "@/components/hunts/HuntCard";
+import { Hunt } from "@/types/interfaces";
+import supabase from "@/utils/supabase";
 
 const AvailableHunts = () => {
   const [hunts, setHunts] = useState<Hunt[]>([]);

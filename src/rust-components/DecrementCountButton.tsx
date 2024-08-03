@@ -3,16 +3,31 @@
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
 import { useCountStore } from "@/store/countStore";
+import { CountChangeProps } from "@/types/interfaces";
+import supabase from "@/utils/supabase";
 
-const DecrementCountButton = () => {
+const DecrementCountButton = ({ huntId }: CountChangeProps) => {
   const { increment, incrementAmount, decrement } = useCountStore();
 
   const handleClick = async () => {
     decrement();
 
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw new Error("Could not find session.");
+    }
+
+    if (!huntId) {
+      throw new Error("Missing huntId.");
+    }
+
     try {
       await invoke<string>(RustFunctions.UpdateCount, {
-        huntId: "050f5fe8-dfb4-4adb-a380-bae8c765ebe2",
+        huntId,
+        accessToken: session.access_token,
         count: incrementAmount.toString(),
         increment: false,
       });

@@ -2,7 +2,7 @@
 
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
-import supabase from "../utils/supabase";
+import supabase from "@/utils/supabase";
 
 const AddHuntButton = () => {
   const handleClick = async () => {
@@ -15,7 +15,7 @@ const AddHuntButton = () => {
 
     try {
       if (user && session) {
-        const res = await invoke<string>(RustFunctions.AddHunt, {
+        await invoke<string>(RustFunctions.AddHunt, {
           userId: user.id,
           pokemonId: "5",
           accessToken: session.access_token,

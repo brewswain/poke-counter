@@ -7,3 +7,7 @@ export interface Hunt {
   updated_at: string;
   user_id: string;
 }
+
+export interface CountChangeProps {
+  huntId: string;
+}

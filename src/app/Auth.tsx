@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api";
 import { listen } from "@tauri-apps/api/event";
 import { shell } from "@tauri-apps/api";
-import supabase from "./utils/supabase";
+import supabase from "../utils/supabase";
 
 function getLocalHostUrl(port: number) {
   return `http://localhost:${port}`;

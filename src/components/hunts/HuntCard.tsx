@@ -7,7 +7,6 @@ import PokemonDetails from "@/rust-components/PokemonDetails";
 
 const HuntCard = ({ hunt }: { hunt: Hunt }) => {
   const router = useRouter();
-
   return (
     <div
       className="flex max-w-[400px] cursor-pointer flex-col items-center rounded bg-white p-4"
@@ -18,7 +17,7 @@ const HuntCard = ({ hunt }: { hunt: Hunt }) => {
       }
     >
       <PokemonDetails pokemonId={hunt.pokemon_id.toString()} />
-      <Count initial_count={hunt.count} huntId={hunt.id} />
+      <Count huntId={hunt.id} />
     </div>
   );
 };

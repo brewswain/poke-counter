@@ -1,11 +1,14 @@
 "use client";
 
+import { useSearchStore } from "@/store/searchStore";
 import supabase from "@/utils/supabase";
 import { invoke } from "@tauri-apps/api/tauri";
 
 import { RustFunctions } from "./enums";
 
 const AddHuntButton = () => {
+  const { selectedPokemon } = useSearchStore();
+
   const handleClick = async () => {
     const {
       data: { user },
@@ -18,9 +21,10 @@ const AddHuntButton = () => {
       if (user && session) {
         await invoke<string>(RustFunctions.AddHunt, {
           userId: user.id,
-          pokemonId: "5",
+          pokemonId: selectedPokemon.pokemon_id,
           accessToken: session.access_token,
         });
+        window.location.reload();
       } else {
         console.error("User not authenticated");
       }

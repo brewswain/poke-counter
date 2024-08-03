@@ -2,25 +2,10 @@
 
 import { useSearchStore } from "@/store/searchStore";
 import { SearchPokemon } from "@/types/interfaces";
-import { Cross1Icon, MagnifyingGlassIcon } from "@radix-ui/react-icons";
-import { invoke } from "@tauri-apps/api/tauri";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
 
 import React, { useEffect, useRef, useState } from "react";
-
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-
-import { RustFunctions } from "@/rust-components/enums";
 
 import { SearchInput } from "./SearchInput";
 
@@ -29,7 +14,6 @@ const PokemonDropdown = () => {
   const {
     searchQuery,
     setSearchQuery,
-    clearSearchQuery,
     pokemonList,
     addSelectedPokemon,
     selectedPokemon,

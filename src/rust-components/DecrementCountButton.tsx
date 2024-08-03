@@ -8,10 +8,11 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
 
 const DecrementCountButton = ({ huntId }: CountChangeProps) => {
-  const { increment, incrementAmount, decrement } = useCountStore();
+  const { counts, setCount, incrementAmount } = useCountStore();
 
   const handleClick = async () => {
-    decrement();
+    const currentCount = counts[huntId] || 0;
+    const newCount = Math.max(0, currentCount - 1);
 
     const {
       data: { session },
@@ -32,9 +33,9 @@ const DecrementCountButton = ({ huntId }: CountChangeProps) => {
         count: incrementAmount.toString(),
         increment: false,
       });
+      setCount(huntId, newCount);
     } catch (error) {
       console.error(error);
-      increment();
     }
   };
 

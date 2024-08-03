@@ -9,6 +9,7 @@ import { useEffect } from "react";
 import SignOut from "@/components/auth/SignOut";
 import PokemonDropdown from "@/components/pokemonList/PokemonDropdown";
 
+import AddHuntButton from "@/rust-components/AddHunt";
 import AvailableHunts from "@/rust-components/AvailableHunts";
 import { RustFunctions } from "@/rust-components/enums";
 
@@ -38,6 +39,7 @@ const HuntsList = () => {
       </div>
 
       <PokemonDropdown />
+      <AddHuntButton />
       <AvailableHunts />
     </main>
   );

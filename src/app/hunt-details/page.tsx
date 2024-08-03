@@ -16,9 +16,8 @@ const HuntDetails = () => {
   const searchParams = useSearchParams();
   const huntId = searchParams.get("huntId");
   const pokemonId = searchParams.get("pokemonId");
-  const initial_count = searchParams.get("initial_count");
 
-  if (!huntId || !pokemonId || !initial_count) {
+  if (!huntId || !pokemonId) {
     return <div>missing information</div>;
   }
   return (
@@ -28,7 +27,7 @@ const HuntDetails = () => {
         <SignOut />
       </div>
       <PokemonDetails pokemonId={pokemonId} />
-      <Count initial_count={parseInt(initial_count)} huntId={huntId} />
+      <Count huntId={huntId} />
       <AddHuntButton />
       <IncrementAmount />
 

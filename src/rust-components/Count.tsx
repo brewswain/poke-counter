@@ -8,8 +8,8 @@ import { useEffect } from "react";
 
 import { RustFunctions } from "./enums";
 
-const Count = ({ huntId }: { initial_count: number; huntId: string }) => {
-  const { count, setCount } = useCountStore();
+const Count = ({ huntId }: { huntId: string }) => {
+  const { counts, setCount } = useCountStore();
 
   const fetchData = async () => {
     const {
@@ -27,7 +27,7 @@ const Count = ({ huntId }: { initial_count: number; huntId: string }) => {
             const updated_count = data[0].count;
 
             if (!isNaN(updated_count)) {
-              setCount(updated_count);
+              setCount(huntId, updated_count);
             }
           })
           .catch(console.error);
@@ -39,13 +39,9 @@ const Count = ({ huntId }: { initial_count: number; huntId: string }) => {
 
   useEffect(() => {
     fetchData();
-
-    return () => {
-      setCount(0);
-    };
   }, []);
 
-  return <div className="text-black">Count: {count}</div>;
+  return <div className="text-black">Count: {counts[huntId]}</div>;
 };
 
 export default Count;

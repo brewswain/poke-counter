@@ -1,21 +1,34 @@
 import { create } from "zustand";
 
 interface CountState {
-  count: number;
+  counts: { [huntId: string]: number };
+  setCount: (huntId: string, count: number) => void;
   incrementAmount: number;
-  setCount: (count: number) => void;
   setIncrementAmount: (amount: number) => void;
-  increment: () => void;
-  decrement: () => void;
+  incrementCount: (huntId: string) => void;
+  decrementCount: (huntId: string) => void;
 }
 
 export const useCountStore = create<CountState>((set) => ({
-  count: 0,
+  counts: {},
+  setCount: (huntId, count) =>
+    set((state) => ({
+      counts: { ...state.counts, [huntId]: count },
+    })),
   incrementAmount: 1,
-  setCount: (count) => set({ count }),
   setIncrementAmount: (amount) => set({ incrementAmount: amount }),
-  increment: () =>
-    set((state) => ({ count: state.count + state.incrementAmount })),
-  decrement: () =>
-    set((state) => ({ count: state.count - state.incrementAmount })),
+  incrementCount: (huntId) =>
+    set((state) => ({
+      counts: {
+        ...state.counts,
+        [huntId]: (state.counts[huntId] || 0) + state.incrementAmount,
+      },
+    })),
+  decrementCount: (huntId) =>
+    set((state) => ({
+      counts: {
+        ...state.counts,
+        [huntId]: (state.counts[huntId] || 0) - state.incrementAmount,
+      },
+    })),
 }));

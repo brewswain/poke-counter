@@ -8,11 +8,11 @@ import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
 
 const IncrementCountButton = ({ huntId }: CountChangeProps) => {
-  const { increment, incrementAmount, decrement } = useCountStore();
+  const { counts, setCount, incrementAmount } = useCountStore();
 
   const handleClick = async () => {
-    increment();
-
+    const currentCount = counts[huntId] || 0;
+    const newCount = currentCount + incrementAmount;
     const {
       data: { session },
     } = await supabase.auth.getSession();
@@ -26,17 +26,15 @@ const IncrementCountButton = ({ huntId }: CountChangeProps) => {
     }
 
     try {
-      const res = await invoke<string>(RustFunctions.UpdateCount, {
+      await invoke<string>(RustFunctions.UpdateCount, {
         huntId,
         count: incrementAmount.toString(),
         increment: true,
         accessToken: session.access_token,
       });
-
-      console.log(JSON.parse(res));
+      setCount(huntId, newCount);
     } catch (error) {
       console.error(error);
-      decrement();
     }
   };
 

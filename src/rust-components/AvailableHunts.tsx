@@ -23,7 +23,6 @@ const AvailableHunts = () => {
         })
           .then((result) => {
             const data: Hunt[] = JSON.parse(result);
-            console.log(data);
             setHunts(data);
           })
           .catch(console.error);
@@ -44,7 +43,7 @@ const AvailableHunts = () => {
   }, []);
 
   return (
-    <div className="flex gap-2 m-4">
+    <div className="m-4 flex gap-2">
       {hunts && hunts.length
         ? hunts.map((hunt) => <HuntCard hunt={hunt} key={hunt.id} />)
         : null}

@@ -30,7 +30,7 @@ const AddHuntButton = () => {
 
   return (
     <button
-      className="bg-white text-black text-lg font-semibold rounded p-4"
+      className="rounded bg-white p-4 text-lg font-semibold text-black"
       onClick={handleClick}
     >
       Click to create a new hunt!

@@ -8,10 +8,10 @@ const HuntCard = ({ hunt }: { hunt: Hunt }) => {
 
   return (
     <div
-      className="p-4 flex flex-col items-center bg-white rounded max-w-[400px] cursor-pointer"
+      className="flex max-w-[400px] cursor-pointer flex-col items-center rounded bg-white p-4"
       onClick={() =>
         router.push(
-          `/hunt-details?huntId=${hunt.id}&pokemonId=${hunt.pokemon_id}&initial_count=${hunt.count}`
+          `/hunt-details?huntId=${hunt.id}&pokemonId=${hunt.pokemon_id}&initial_count=${hunt.count}`,
         )
       }
     >

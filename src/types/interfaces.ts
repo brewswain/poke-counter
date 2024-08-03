@@ -11,3 +11,8 @@ export interface Hunt {
 export interface CountChangeProps {
   huntId: string;
 }
+
+export interface SearchPokemon {
+  name: string;
+  sprite: string;
+}

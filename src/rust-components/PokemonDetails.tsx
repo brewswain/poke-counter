@@ -20,12 +20,12 @@ const PokemonDetails = ({ pokemonId }: { pokemonId: string }) => {
   return (
     <>
       {pokemon ? (
-        <div className="flex justify-center items-center">
+        <div className="flex items-center justify-center">
           <img src={pokemon?.sprite} alt="" className="" />
           <h1 className="text-2xl text-black">{pokemon?.name}</h1>
         </div>
       ) : (
-        <div className="flex justify-center items-center">loading...</div>
+        <div className="flex items-center justify-center">loading...</div>
       )}
     </>
   );

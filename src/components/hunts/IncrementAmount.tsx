@@ -18,7 +18,7 @@ const IncrementAmount = () => {
       min="1"
       value={incrementAmount}
       onChange={handleChange}
-      className="bg-white text-black text-lg font-semibold rounded p-2"
+      className="rounded bg-white p-2 text-lg font-semibold text-black"
     />
   );
 };

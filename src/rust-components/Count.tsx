@@ -5,15 +5,9 @@ import { useEffect } from "react";
 import { invoke } from "@tauri-apps/api/tauri";
 import { RustFunctions } from "./enums";
 import { useCountStore } from "@/store/countStore";
-import supabase from "../utils/supabase";
+import supabase from "@/utils/supabase";
 
-const Count = ({
-  initial_count,
-  huntId,
-}: {
-  initial_count: number;
-  huntId: string;
-}) => {
+const Count = ({ huntId }: { initial_count: number; huntId: string }) => {
   const { count, setCount } = useCountStore();
 
   const fetchData = async () => {
@@ -28,7 +22,6 @@ const Count = ({
           accessToken: session.access_token,
         })
           .then((result) => {
-            console.log({ result });
             const data = JSON.parse(result);
             const updated_count = data[0].count;
 

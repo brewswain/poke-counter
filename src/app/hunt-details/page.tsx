@@ -22,7 +22,7 @@ const HuntDetails = () => {
     return <div>missing information</div>;
   }
   return (
-    <div className="flex flex-col items-center min-h-dvh bg-slate-500 gap-4">
+    <div className="flex min-h-dvh flex-col items-center gap-4 bg-slate-500">
       <div className="flex gap-2">
         <HomeButton />
         <SignOut />

@@ -12,7 +12,7 @@ const SignOut = () => {
   };
   return (
     <button
-      className="rounded bg-white p-4 text-lg text-black border border-black mb-4"
+      className="mb-4 rounded border border-black bg-white p-4 text-lg text-black"
       onClick={() => handleSignOut()}
     >
       Sign out

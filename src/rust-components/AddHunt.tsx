@@ -4,11 +4,14 @@ import { useSearchStore } from "@/store/searchStore";
 import supabase from "@/utils/supabase";
 import { invoke } from "@tauri-apps/api/tauri";
 
+import { useRouter } from "next/navigation";
+
 import { RustFunctions } from "./enums";
 
 const AddHuntButton = () => {
   const { selectedPokemon } = useSearchStore();
 
+  const router = useRouter();
   const handleClick = async () => {
     const {
       data: { user },
@@ -19,12 +22,19 @@ const AddHuntButton = () => {
 
     try {
       if (user && session) {
-        await invoke<string>(RustFunctions.AddHunt, {
+        const res = await invoke<string>(RustFunctions.AddHunt, {
           userId: user.id,
           pokemonId: selectedPokemon.pokemon_id,
           accessToken: session.access_token,
         });
-        window.location.reload();
+
+        const data = JSON.parse(res);
+        console.log(data);
+        if (data[0].id) {
+          router.push(
+            `/hunt-details?huntId=${data[0].id}&pokemonId=${selectedPokemon.pokemon_id}`,
+          );
+        }
       } else {
         console.error("User not authenticated");
       }
@@ -35,10 +45,11 @@ const AddHuntButton = () => {
 
   return (
     <button
-      className="rounded bg-white p-4 text-lg font-semibold text-black"
+      className="rounded bg-white p-4 text-lg font-semibold text-black disabled:bg-gray-500 disabled:text-gray-400"
       onClick={handleClick}
+      disabled={!selectedPokemon.name}
     >
-      Click to create a new hunt!
+      New hunt
     </button>
   );
 };

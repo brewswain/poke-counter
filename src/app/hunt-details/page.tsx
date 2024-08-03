@@ -28,7 +28,6 @@ const HuntDetails = () => {
       </div>
       <PokemonDetails pokemonId={pokemonId} />
       <Count huntId={huntId} />
-      <AddHuntButton />
       <IncrementAmount />
 
       <section className="flex gap-2">

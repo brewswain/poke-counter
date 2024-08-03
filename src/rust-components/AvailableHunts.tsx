@@ -45,7 +45,7 @@ const AvailableHunts = () => {
   }, []);
 
   return (
-    <div className="m-4 flex gap-2">
+    <div className="m-4 flex flex-wrap gap-2">
       {hunts && hunts.length
         ? hunts.map((hunt) => <HuntCard hunt={hunt} key={hunt.id} />)
         : null}

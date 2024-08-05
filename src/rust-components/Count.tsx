@@ -2,14 +2,14 @@
 
 import { useCountStore } from "@/store/countStore";
 import supabase from "@/utils/supabase";
-import { invoke } from "@tauri-apps/api/tauri";
 
 import { useEffect } from "react";
 
-import { RustFunctions } from "./enums";
+import { useGetCount } from "./hookWrappers/rustWrappers";
 
 const Count = ({ huntId }: { huntId: string }) => {
   const { counts, setCount } = useCountStore();
+  const getCount = useGetCount();
 
   const fetchData = async () => {
     const {
@@ -18,19 +18,15 @@ const Count = ({ huntId }: { huntId: string }) => {
 
     try {
       if (session) {
-        invoke<string>(RustFunctions.GetCount, {
+        const data = await getCount({
           huntId,
           accessToken: session.access_token,
-        })
-          .then((result) => {
-            const data = JSON.parse(result);
-            const updated_count = data[0].count;
+        });
+        const updated_count = data[0].count;
 
-            if (!isNaN(updated_count)) {
-              setCount(huntId, updated_count);
-            }
-          })
-          .catch(console.error);
+        if (!isNaN(updated_count)) {
+          setCount(huntId, updated_count);
+        }
       }
     } catch (error) {
       console.error(error);

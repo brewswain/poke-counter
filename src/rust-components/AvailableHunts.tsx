@@ -2,16 +2,16 @@
 
 import { Hunt } from "@/types/interfaces";
 import supabase from "@/utils/supabase";
-import { invoke } from "@tauri-apps/api/tauri";
 
 import { useEffect, useState } from "react";
 
 import HuntCard from "@/components/hunts/HuntCard";
 
-import { RustFunctions } from "./enums";
+import { useGetAvailableHunts } from "./hookWrappers/rustWrappers";
 
 const AvailableHunts = () => {
   const [hunts, setHunts] = useState<Hunt[]>([]);
+  const getHunts = useGetAvailableHunts();
 
   const fetchData = async () => {
     const {
@@ -20,14 +20,11 @@ const AvailableHunts = () => {
 
     try {
       if (session) {
-        invoke<string>(RustFunctions.GetAvailableHunts, {
+        const data = await getHunts({
           accessToken: session.access_token,
-        })
-          .then((result) => {
-            const data: Hunt[] = JSON.parse(result);
-            setHunts(data);
-          })
-          .catch(console.error);
+        });
+
+        setHunts(data);
       } else {
         console.error("User not authenticated");
       }

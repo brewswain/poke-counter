@@ -1,21 +1,23 @@
 "use client";
 
-import { invoke } from "@tauri-apps/api/tauri";
-
 import { useEffect, useState } from "react";
 
-import { RustFunctions } from "./enums";
+import { useGetPokemonDetails } from "./hookWrappers/rustWrappers";
 
 const PokemonDetails = ({ pokemonId }: { pokemonId: string }) => {
   const [pokemon, setPokemon] = useState<{ name: string; sprite: string }>();
+  const getPokemonDetails = useGetPokemonDetails();
 
+  const fetchPokemon = async () => {
+    try {
+      const data = await getPokemonDetails({ pokemonId });
+      setPokemon(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    invoke<string>(RustFunctions.GetPokemon, { pokemonId })
-      .then((result) => {
-        const data = JSON.parse(result);
-        setPokemon(data);
-      })
-      .catch(console.error);
+    fetchPokemon();
   }, []);
 
   return (

@@ -2,16 +2,17 @@
 
 import { useSearchStore } from "@/store/searchStore";
 import supabase from "@/utils/supabase";
-import { invoke } from "@tauri-apps/api/tauri";
 
 import { useRouter } from "next/navigation";
 
-import { RustFunctions } from "./enums";
+import { useAddHunt } from "./hookWrappers/rustWrappers";
 
 const AddHuntButton = () => {
   const { selectedPokemon } = useSearchStore();
 
   const router = useRouter();
+  const addHunt = useAddHunt();
+
   const handleClick = async () => {
     const {
       data: { user },
@@ -22,14 +23,12 @@ const AddHuntButton = () => {
 
     try {
       if (user && session) {
-        const res = await invoke<string>(RustFunctions.AddHunt, {
+        const data = await addHunt({
           userId: user.id,
           pokemonId: selectedPokemon.pokemon_id,
           accessToken: session.access_token,
         });
 
-        const data = JSON.parse(res);
-        console.log(data);
         if (data[0].id) {
           router.push(
             `/hunt-details?huntId=${data[0].id}&pokemonId=${selectedPokemon.pokemon_id}`,

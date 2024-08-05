@@ -3,12 +3,13 @@
 import { useCountStore } from "@/store/countStore";
 import { CountChangeProps } from "@/types/interfaces";
 import supabase from "@/utils/supabase";
-import { invoke } from "@tauri-apps/api/tauri";
 
-import { RustFunctions } from "./enums";
+import { useDecrementCount } from "./hookWrappers/rustWrappers";
 
 const DecrementCountButton = ({ huntId }: CountChangeProps) => {
   const { counts, setCount, incrementAmount } = useCountStore();
+
+  const decrementCount = useDecrementCount();
 
   const handleClick = async () => {
     const currentCount = counts[huntId] || 0;
@@ -27,12 +28,12 @@ const DecrementCountButton = ({ huntId }: CountChangeProps) => {
     }
 
     try {
-      await invoke<string>(RustFunctions.UpdateCount, {
+      await decrementCount({
         huntId,
         accessToken: session.access_token,
         count: incrementAmount.toString(),
-        increment: false,
       });
+
       setCount(huntId, newCount);
     } catch (error) {
       console.error(error);

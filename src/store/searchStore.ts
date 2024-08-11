@@ -2,7 +2,7 @@ import { SearchPokemon } from "@/types/interfaces";
 import { invoke } from "@tauri-apps/api/tauri";
 import Fuse from "fuse.js";
 import { StateCreator, create } from "zustand";
-import { PersistOptions, persist } from "zustand/middleware";
+import { PersistOptions, createJSONStorage, persist } from "zustand/middleware";
 
 import { RustFunctions } from "@/rust-components/enums";
 
@@ -41,7 +41,7 @@ export const useSearchStore = create(
     }),
     {
       name: "pokemon-search-storage",
-      getStorage: () => localStorage,
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         ...state,
         pokemonList: state.pokemonList,

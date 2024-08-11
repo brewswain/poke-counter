@@ -23,7 +23,7 @@ const HuntCard = ({ hunt }: { hunt: Hunt }) => {
       }}
     >
       <PokemonDetails name={hunt.pokemon_name} sprite={hunt.pokemon_sprite} />
-      {/* <Count count={hunt.count} huntId={hunt.id} /> */}
+      <Count count={hunt.count} huntId={hunt.id} />
     </div>
   );
 };

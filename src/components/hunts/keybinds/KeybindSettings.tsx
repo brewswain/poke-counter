@@ -27,6 +27,18 @@ export const KeybindSettings = () => {
       (e: React.KeyboardEvent) => {
         e.preventDefault();
         const key = e.key;
+
+        if (key === "Escape") {
+          setter(
+            setter === setTempIncrement
+              ? incrementKeybind.join("+")
+              : decrementKeybind.join("+"),
+          );
+          focusRef.current = false;
+          (e.currentTarget as HTMLElement).blur();
+          return;
+        }
+
         setter((prev) => {
           if (!focusRef.current) {
             focusRef.current = true;

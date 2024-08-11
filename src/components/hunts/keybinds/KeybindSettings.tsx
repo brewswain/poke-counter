@@ -1,8 +1,19 @@
 import { useCountStore } from "@/store/countStore";
+import supabase from "@/utils/supabase";
 
 import { useCallback, useRef, useState } from "react";
 
-export const KeybindSettings = () => {
+import { useUpdateHuntKeybinds } from "@/rust-components/hookWrappers/rustWrappers";
+
+export const KeybindSettings = ({
+  huntId,
+  initialDatabaseIncrementKeybind,
+  initialDatabaseDecrementKeybind,
+}: {
+  huntId: string;
+  initialDatabaseIncrementKeybind: string[];
+  initialDatabaseDecrementKeybind: string[];
+}) => {
   const {
     incrementKeybind,
     decrementKeybind,
@@ -11,14 +22,15 @@ export const KeybindSettings = () => {
     setKeybindInputFocused,
   } = useCountStore();
   const [tempIncrement, setTempIncrement] = useState(
-    incrementKeybind.join("+"),
+    initialDatabaseIncrementKeybind.join("+"),
   );
   const [tempDecrement, setTempDecrement] = useState(
-    decrementKeybind.join("+"),
+    initialDatabaseDecrementKeybind.join("+"),
   );
   const incrementFocusRef = useRef(false);
   const decrementFocusRef = useRef(false);
 
+  const updateHuntKeybinds = useUpdateHuntKeybinds();
   const handleKeyDown = useCallback(
     (
       setter: React.Dispatch<React.SetStateAction<string>>,
@@ -59,9 +71,23 @@ export const KeybindSettings = () => {
     [],
   );
 
-  const handleSave = () => {
+  const handleSave = async () => {
     setIncrementKeybind(tempIncrement.split("+").filter((k) => k !== ""));
     setDecrementKeybind(tempDecrement.split("+").filter((k) => k !== ""));
+
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (!session) {
+      throw new Error("Could not find session.");
+    }
+    await updateHuntKeybinds({
+      huntId,
+      incrementKeybind: tempIncrement.split("+").filter((k) => k !== ""),
+      decrementKeybind: tempDecrement.split("+").filter((k) => k !== ""),
+      accessToken: session.access_token,
+    });
   };
   const handleFocus =
     (

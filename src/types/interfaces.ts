@@ -6,6 +6,8 @@ export interface Hunt {
   pokemon_id: number;
   updated_at: string;
   user_id: string;
+  increment_keybind: string[];
+  decrement_keybind: string[];
 }
 
 export interface CountChangeProps {

@@ -93,6 +93,32 @@ async fn get_pokemon(pokemon_id: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
+async fn update_hunt_keybinds( hunt_id: &str,
+    increment_keybind: Vec<String>,
+    decrement_keybind: Vec<String>,
+    access_token: &str) -> Result<String, String> {
+        let client = initialize_client();
+
+        let json_value = json!({
+            "increment_keybind": increment_keybind,
+            "decrement_keybind": decrement_keybind
+        });
+        let json_string = json_value.to_string();
+    
+        let response = client
+            .from("hunts")
+            .auth(access_token)
+            .update(json_string)
+            .eq("id", hunt_id)
+            .execute().await
+            .map_err(|e| e.to_string())?;
+    
+        let body = response.text().await.map_err(|e| e.to_string())?;
+    
+        Ok(body)
+    }
+
+#[tauri::command]
 async fn get_available_hunts(access_token: &str) -> Result<String, String> {
     let client = initialize_client();
 
@@ -216,6 +242,7 @@ fn main() {
                 supabase_test,
                 add_new_hunt,
                 get_current_count,
+                update_hunt_keybinds,
                 get_available_hunts,
                 update_count,
                 get_pokemon_list,

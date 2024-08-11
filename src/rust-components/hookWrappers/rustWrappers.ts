@@ -59,3 +59,26 @@ export const useGetPokemonDetails = () => {
   return ({ pokemonId }: { pokemonId: string }) =>
     getPokemonDetails({ pokemonId });
 };
+
+export const useUpdateHuntKeybinds = () => {
+  const updateHuntKeybinds = useRust(RustFunctions.UpdateHuntKeybinds);
+
+  return ({
+    huntId,
+    accessToken,
+    incrementKeybind,
+    decrementKeybind,
+  }: {
+    huntId: string;
+    accessToken: string;
+    incrementKeybind: string[];
+    decrementKeybind: string[];
+  }) => {
+    updateHuntKeybinds({
+      huntId,
+      incrementKeybind,
+      decrementKeybind,
+      accessToken,
+    });
+  };
+};

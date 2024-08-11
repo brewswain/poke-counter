@@ -18,18 +18,6 @@ const HuntDetails = () => {
   const huntId = searchParams.get("huntId");
   const pokemonId = searchParams.get("pokemonId");
 
-  const encodedIncrementKeybind = searchParams.get("incrementkeybind");
-  const encodedDecrementKeybind = searchParams.get("decrementkeybind");
-
-  const incrementKeybind: string[] = encodedIncrementKeybind
-    ? JSON.parse(decodeURIComponent(encodedIncrementKeybind))
-    : [];
-
-  const decrementKeybind: string[] = encodedDecrementKeybind
-    ? JSON.parse(decodeURIComponent(encodedDecrementKeybind))
-    : [];
-
-  console.log({ incrementKeybind, decrementKeybind });
   if (!huntId || !pokemonId) {
     return <div>missing information</div>;
   }
@@ -48,11 +36,7 @@ const HuntDetails = () => {
 
         <IncrementCountButton huntId={huntId} />
         <DecrementCountButton huntId={huntId} />
-        <KeybindSettings
-          huntId={huntId}
-          initialDatabaseIncrementKeybind={incrementKeybind}
-          initialDatabaseDecrementKeybind={decrementKeybind}
-        />
+        <KeybindSettings huntId={huntId} />
       </section>
     </div>
   );

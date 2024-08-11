@@ -5,15 +5,7 @@ import { useCallback, useRef, useState } from "react";
 
 import { useUpdateHuntKeybinds } from "@/rust-components/hookWrappers/rustWrappers";
 
-export const KeybindSettings = ({
-  huntId,
-  initialDatabaseIncrementKeybind,
-  initialDatabaseDecrementKeybind,
-}: {
-  huntId: string;
-  initialDatabaseIncrementKeybind: string[];
-  initialDatabaseDecrementKeybind: string[];
-}) => {
+export const KeybindSettings = ({ huntId }: { huntId: string }) => {
   const {
     incrementKeybind,
     decrementKeybind,
@@ -22,10 +14,10 @@ export const KeybindSettings = ({
     setKeybindInputFocused,
   } = useCountStore();
   const [tempIncrement, setTempIncrement] = useState(
-    initialDatabaseIncrementKeybind.join("+"),
+    incrementKeybind.join("+"),
   );
   const [tempDecrement, setTempDecrement] = useState(
-    initialDatabaseDecrementKeybind.join("+"),
+    decrementKeybind.join("+"),
   );
   const incrementFocusRef = useRef(false);
   const decrementFocusRef = useRef(false);

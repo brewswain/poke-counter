@@ -1,18 +1,27 @@
-"use client";
-
+import {
+  createHandleDecrement,
+  createHandleIncrement,
+} from "@/lib/count/countUtils";
 import { useCountStore } from "@/store/countStore";
 
 import { useEffect, useState } from "react";
 
+import {
+  useDecrementCount,
+  useIncrementCount,
+} from "@/rust-components/hookWrappers/rustWrappers";
+
 const KeybindHandler = ({ huntId }: { huntId: string }) => {
-  const {
-    incrementKeybind,
-    decrementKeybind,
-    incrementCount,
-    decrementCount,
-    isKeybindInputFocused,
-  } = useCountStore();
+  const countStore = useCountStore();
+  const { incrementKeybind, decrementKeybind, isKeybindInputFocused } =
+    countStore;
   const [pressedKeys, setPressedKeys] = useState(new Set<string>());
+
+  const incrementCount = useIncrementCount();
+  const decrementCount = useDecrementCount();
+
+  const handleIncrement = createHandleIncrement(incrementCount);
+  const handleDecrement = createHandleDecrement(decrementCount);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -29,12 +38,12 @@ const KeybindHandler = ({ huntId }: { huntId: string }) => {
     };
 
     const checkKeybinds = () => {
-      if (isKeybindInputFocused) return; // Don't increment/decrement if keybind input is focused
+      if (isKeybindInputFocused) return;
 
       if (incrementKeybind.every((key) => pressedKeys.has(key))) {
-        incrementCount(huntId);
+        handleIncrement(huntId, countStore);
       } else if (decrementKeybind.every((key) => pressedKeys.has(key))) {
-        decrementCount(huntId);
+        handleDecrement(huntId, countStore);
       }
     };
 
@@ -52,9 +61,10 @@ const KeybindHandler = ({ huntId }: { huntId: string }) => {
     isKeybindInputFocused,
     incrementKeybind,
     decrementKeybind,
-    incrementCount,
-    decrementCount,
+    handleIncrement,
+    handleDecrement,
     pressedKeys,
+    countStore,
   ]);
 
   return null;

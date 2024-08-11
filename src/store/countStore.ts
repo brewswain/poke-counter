@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface CountState {
+export interface CountState {
   counts: { [huntId: string]: number };
   setCount: (huntId: string, count: number) => void;
   incrementAmount: number;

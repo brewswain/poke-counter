@@ -4,9 +4,10 @@ import { useSearchParams } from "next/navigation";
 
 import SignOut from "@/components/auth/SignOut";
 import IncrementAmount from "@/components/hunts/IncrementAmount";
+import KeybindHandler from "@/components/hunts/keybinds/KeybindHandler";
+import { KeybindSettings } from "@/components/hunts/keybinds/KeybindSettings";
 import HomeButton from "@/components/nav/HomeButton";
 
-import AddHuntButton from "@/rust-components/AddHunt";
 import Count from "@/rust-components/Count";
 import DecrementCountButton from "@/rust-components/DecrementCountButton";
 import IncrementCountButton from "@/rust-components/IncrementCountButton";
@@ -31,8 +32,11 @@ const HuntDetails = () => {
       <IncrementAmount />
 
       <section className="flex gap-2">
+        <KeybindHandler huntId={huntId} />
+
         <IncrementCountButton huntId={huntId} />
         <DecrementCountButton huntId={huntId} />
+        <KeybindSettings />
       </section>
     </div>
   );

@@ -39,12 +39,14 @@ const IncrementCountButton = ({ huntId }: CountChangeProps) => {
   };
 
   return (
-    <button
-      className="rounded bg-white p-4 text-lg font-semibold text-black"
-      onClick={handleClick}
-    >
-      Increment
-    </button>
+    <>
+      <button
+        className="rounded bg-white p-4 text-lg font-semibold text-black"
+        onClick={handleClick}
+      >
+        Increment
+      </button>
+    </>
   );
 };
 

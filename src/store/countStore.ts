@@ -7,6 +7,12 @@ interface CountState {
   setIncrementAmount: (amount: number) => void;
   incrementCount: (huntId: string) => void;
   decrementCount: (huntId: string) => void;
+  incrementKeybind: string[];
+  decrementKeybind: string[];
+  setIncrementKeybind: (keys: string[]) => void;
+  setDecrementKeybind: (keys: string[]) => void;
+  isKeybindInputFocused: boolean;
+  setKeybindInputFocused: (isFocused: boolean) => void;
 }
 
 export const useCountStore = create<CountState>((set) => ({
@@ -31,4 +37,11 @@ export const useCountStore = create<CountState>((set) => ({
         [huntId]: (state.counts[huntId] || 0) - state.incrementAmount,
       },
     })),
+  incrementKeybind: ["ArrowUp"],
+  decrementKeybind: ["ArrowDown"],
+  setIncrementKeybind: (keys) => set({ incrementKeybind: keys }),
+  setDecrementKeybind: (keys) => set({ decrementKeybind: keys }),
+  isKeybindInputFocused: false,
+  setKeybindInputFocused: (isFocused: boolean) =>
+    set({ isKeybindInputFocused: isFocused }),
 }));

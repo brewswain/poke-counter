@@ -4,6 +4,8 @@ import { useCountStore } from "@/store/countStore";
 import { CountChangeProps } from "@/types/interfaces";
 import supabase from "@/utils/supabase";
 
+import KeybindHandler from "@/components/hunts/keybinds/KeybindHandler";
+
 import { useDecrementCount } from "./hookWrappers/rustWrappers";
 
 const DecrementCountButton = ({ huntId }: CountChangeProps) => {
@@ -41,12 +43,14 @@ const DecrementCountButton = ({ huntId }: CountChangeProps) => {
   };
 
   return (
-    <button
-      className="rounded bg-white p-4 text-lg font-semibold text-black"
-      onClick={handleClick}
-    >
-      Decrement
-    </button>
+    <>
+      <button
+        className="rounded bg-white p-4 text-lg font-semibold text-black"
+        onClick={handleClick}
+      >
+        Decrement
+      </button>
+    </>
   );
 };
 

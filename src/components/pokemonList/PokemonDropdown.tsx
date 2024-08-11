@@ -23,6 +23,7 @@ const PokemonDropdown = () => {
     setFuse,
   } = useSearchStore();
 
+  console.log({ pokemonList });
   useEffect(() => {
     if (pokemonList.length > 0 && !fuse) {
       const fuseOptions = {

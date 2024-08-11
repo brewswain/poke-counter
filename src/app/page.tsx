@@ -4,14 +4,15 @@ import { AuthSession } from "@supabase/supabase-js";
 
 import { useEffect, useState } from "react";
 
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 
 import supabase from "../utils/supabase";
-import Auth from "./Auth";
 
 export default function Home() {
   const [session, setSession] = useState<AuthSession | null>(null);
   const router = useRouter();
+  const Auth = dynamic(() => import("./Auth"), { ssr: false });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {

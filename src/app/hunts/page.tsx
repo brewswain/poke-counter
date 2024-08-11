@@ -18,16 +18,16 @@ const HuntsList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await invoke<string>(RustFunctions.GetPokemonList);
-      const data: SearchPokemon[] = JSON.parse(response);
-      setPokemonList(data);
+      if (pokemonList.length === 0) {
+        const response = await invoke<string>(RustFunctions.GetPokemonList);
+        const data: SearchPokemon[] = JSON.parse(response);
+        setPokemonList(data);
+      }
     };
 
-    if (!pokemonList || pokemonList.length === 0) {
-      fetchData();
-    }
+    fetchData();
 
-    () => {
+    return () => {
       clearSearchQuery();
     };
   }, []);

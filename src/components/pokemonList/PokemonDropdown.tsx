@@ -5,7 +5,7 @@ import { SearchPokemon } from "@/types/interfaces";
 import Fuse from "fuse.js";
 import { FixedSizeList as List } from "react-window";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { SearchInput } from "./SearchInput";
 
@@ -23,7 +23,6 @@ const PokemonDropdown = () => {
     setFuse,
   } = useSearchStore();
 
-  console.log({ pokemonList });
   useEffect(() => {
     if (pokemonList.length > 0 && !fuse) {
       const fuseOptions = {
@@ -67,30 +66,37 @@ const PokemonDropdown = () => {
     };
   }, []);
 
-  const handlePokemonSelect = (pokemon: SearchPokemon) => {
-    setSearchQuery(pokemon.name);
-    addSelectedPokemon(pokemon);
-    setIsOpen(false);
-  };
+  const handlePokemonSelect = useCallback(
+    (pokemon: SearchPokemon) => {
+      setSearchQuery(pokemon.name);
+      addSelectedPokemon(pokemon);
+      setIsOpen(false);
+    },
+    [setSearchQuery, addSelectedPokemon],
+  );
 
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const pokemon = filteredResults[index];
-    return (
-      <li
-        style={style}
-        className="px-3 py-2 hover:bg-slate-100 list-none cursor-pointer capitalize "
-        onClick={() => handlePokemonSelect(pokemon)}
-      >
-        {pokemon.name}
-      </li>
-    );
-  };
+  const Row = useCallback(
+    ({ index, style }: { index: number; style: React.CSSProperties }) => {
+      const pokemon = filteredResults[index];
+      return (
+        <li
+          style={style}
+          className="px-3 py-2 hover:bg-slate-100 list-none cursor-pointer capitalize"
+          onClick={() => handlePokemonSelect(pokemon)}
+        >
+          {pokemon.name}
+        </li>
+      );
+    },
+    [filteredResults, handlePokemonSelect],
+  );
+
+  const renderCount = useRef(0);
+
+  useEffect(() => {
+    renderCount.current += 1;
+    console.log(`PokemonDropdown rendered ${renderCount.current} times`);
+  });
 
   return (
     <div className="relative w-[280px]" ref={dropdownRef}>

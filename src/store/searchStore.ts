@@ -1,7 +1,10 @@
 import { SearchPokemon } from "@/types/interfaces";
+import { invoke } from "@tauri-apps/api/tauri";
 import Fuse from "fuse.js";
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { StateCreator, create } from "zustand";
+import { PersistOptions, persist } from "zustand/middleware";
+
+import { RustFunctions } from "@/rust-components/enums";
 
 interface SearchState {
   searchQuery: string;
@@ -16,9 +19,13 @@ interface SearchState {
   selectedPokemon: SearchPokemon;
   addSelectedPokemon: (pokemon: SearchPokemon) => void;
 }
+type SearchPersist = (
+  config: StateCreator<SearchState>,
+  options: PersistOptions<SearchState>,
+) => StateCreator<SearchState>;
 
 export const useSearchStore = create(
-  persist<SearchState>(
+  (persist as SearchPersist)(
     (set) => ({
       searchQuery: "",
       setSearchQuery: (query) => set({ searchQuery: query }),
@@ -38,12 +45,48 @@ export const useSearchStore = create(
       partialize: (state) => ({
         ...state,
         pokemonList: state.pokemonList,
-        // Set other properties to their default values
         searchQuery: "",
         filteredResults: [],
         fuse: null,
         selectedPokemon: { name: "", sprite: "", pokemon_id: "" },
       }),
+      onRehydrateStorage: (state) => {
+        return (state, error) => {
+          if (error) {
+            console.log("an error happened during hydration", error);
+          } else {
+            const lastFetchTime = localStorage.getItem(
+              "lastPokemonListFetchTime",
+            );
+            const currentTime = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+            if (
+              !lastFetchTime ||
+              currentTime - parseInt(lastFetchTime) > oneDay
+            ) {
+              const refetchPokemonList = async () => {
+                console.log("refetching pokemon list");
+                try {
+                  const response = await invoke<string>(
+                    RustFunctions.GetPokemonList,
+                  );
+                  const data: SearchPokemon[] = JSON.parse(response);
+                  state?.setPokemonList(data);
+                } catch (error) {
+                  console.error("Failed to refetch Pokemon list:", error);
+                }
+              };
+
+              refetchPokemonList();
+              localStorage.setItem(
+                "lastPokemonListFetchTime",
+                currentTime.toString(),
+              );
+            }
+          }
+        };
+      },
     },
   ),
 );

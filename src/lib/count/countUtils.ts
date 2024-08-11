@@ -9,6 +9,7 @@ import {
 export const createHandleIncrement =
   (incrementCount: ReturnType<typeof useIncrementCount>) =>
   async (huntId: string, countStore: CountState) => {
+    console.log({ huntId });
     const { counts, setCount, incrementAmount } = countStore;
     const currentCount = counts[huntId] || 0;
     const newCount = currentCount + incrementAmount;

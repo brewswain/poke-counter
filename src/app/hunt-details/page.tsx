@@ -31,7 +31,7 @@ const HuntDetails = () => {
         <SignOut />
       </div>
       <PokemonDetails name={name || ""} sprite={sprite || ""} />
-      <Count count={parseInt(initialCount || "0")} />
+      <Count count={parseInt(initialCount || "0")} huntId={huntId} />
       <IncrementAmount />
 
       <section className="flex gap-2">

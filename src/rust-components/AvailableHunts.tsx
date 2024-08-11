@@ -30,6 +30,7 @@ const HuntList = ({ hunts }: { hunts: Hunt[] }) => {
     </>
   );
 };
+
 const AvailableHunts = () => {
   const [hunts, setHunts] = useState<Hunt[]>([]);
   const getHunts = useGetAvailableHunts();
@@ -41,12 +42,16 @@ const AvailableHunts = () => {
 
     try {
       if (session) {
-        const data = await getHunts({
-          accessToken: session.access_token,
-        });
-
-        console.log({ data });
-        setHunts(data);
+        const cachedHunts = localStorage.getItem("availableHunts");
+        if (cachedHunts) {
+          setHunts(JSON.parse(cachedHunts));
+        } else {
+          const data = await getHunts({
+            accessToken: session.access_token,
+          });
+          setHunts(data);
+          localStorage.setItem("availableHunts", JSON.stringify(data));
+        }
       } else {
         console.error("User not authenticated");
       }
@@ -58,12 +63,13 @@ const AvailableHunts = () => {
   useEffect(() => {
     fetchData();
 
+    const interval = setInterval(fetchData, 15 * 60 * 1000);
+
     return () => {
+      clearInterval(interval);
       setHunts([]);
     };
   }, []);
-
-  console.log({ hunts });
 
   return (
     <div className="m-4 flex flex-wrap gap-2">

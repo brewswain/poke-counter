@@ -3,12 +3,33 @@
 import { Hunt } from "@/types/interfaces";
 import supabase from "@/utils/supabase";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import HuntCard from "@/components/hunts/HuntCard";
 
 import { useGetAvailableHunts } from "./hookWrappers/rustWrappers";
 
+const HuntCardSkeleton = () => {
+  return (
+    <div className="flex max-w-[400px] flex-col items-center rounded bg-white p-4 animate-pulse">
+      <div className="w-24 h-24 bg-gray-300 rounded-full mb-2"></div>
+      <div className="w-3/4 h-4 bg-gray-300 rounded mb-2"></div>
+      <div className="w-1/2 h-4 bg-gray-300 rounded"></div>
+    </div>
+  );
+};
+
+const HuntList = ({ hunts }: { hunts: Hunt[] }) => {
+  return (
+    <>
+      {hunts.map((hunt) => (
+        <Suspense fallback={<HuntCardSkeleton />} key={hunt.id}>
+          <HuntCard hunt={hunt} />
+        </Suspense>
+      ))}
+    </>
+  );
+};
 const AvailableHunts = () => {
   const [hunts, setHunts] = useState<Hunt[]>([]);
   const getHunts = useGetAvailableHunts();
@@ -24,6 +45,7 @@ const AvailableHunts = () => {
           accessToken: session.access_token,
         });
 
+        console.log({ data });
         setHunts(data);
       } else {
         console.error("User not authenticated");
@@ -41,11 +63,13 @@ const AvailableHunts = () => {
     };
   }, []);
 
+  console.log({ hunts });
+
   return (
     <div className="m-4 flex flex-wrap gap-2">
-      {hunts && hunts.length
-        ? hunts.map((hunt) => <HuntCard hunt={hunt} key={hunt.id} />)
-        : null}
+      <Suspense fallback={<HuntCardSkeleton />}>
+        <HuntList hunts={hunts} />
+      </Suspense>
     </div>
   );
 };

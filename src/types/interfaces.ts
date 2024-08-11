@@ -8,6 +8,8 @@ export interface Hunt {
   user_id: string;
   increment_keybind: string[];
   decrement_keybind: string[];
+  pokemon_name: string;
+  pokemon_sprite: string;
 }
 
 export interface CountChangeProps {

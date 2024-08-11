@@ -18,12 +18,12 @@ const HuntCard = ({ hunt }: { hunt: Hunt }) => {
         setDecrementKeybind(hunt.decrement_keybind);
 
         router.push(
-          `/hunt-details?huntId=${hunt.id}&pokemonId=${hunt.pokemon_id}&initial_count=${hunt.count}`,
+          `/hunt-details?huntId=${hunt.id}&pokemonId=${hunt.pokemon_id}&initial_count=${hunt.count}&name=${hunt.pokemon_name}&sprite=${hunt.pokemon_sprite}`,
         );
       }}
     >
-      <PokemonDetails pokemonId={hunt.pokemon_id.toString()} />
-      <Count huntId={hunt.id} />
+      <PokemonDetails name={hunt.pokemon_name} sprite={hunt.pokemon_sprite} />
+      <Count count={hunt.count} />
     </div>
   );
 };

@@ -16,6 +16,9 @@ import PokemonDetails from "@/rust-components/PokemonDetails";
 const HuntDetails = () => {
   const searchParams = useSearchParams();
   const huntId = searchParams.get("huntId");
+  const initialCount = searchParams.get("initial_count");
+  const name = searchParams.get("name");
+  const sprite = searchParams.get("sprite");
   const pokemonId = searchParams.get("pokemonId");
 
   if (!huntId || !pokemonId) {
@@ -27,8 +30,8 @@ const HuntDetails = () => {
         <HomeButton />
         <SignOut />
       </div>
-      <PokemonDetails pokemonId={pokemonId} />
-      <Count huntId={huntId} />
+      <PokemonDetails name={name || ""} sprite={sprite || ""} />
+      <Count count={parseInt(initialCount || "0")} />
       <IncrementAmount />
 
       <section className="flex gap-2">

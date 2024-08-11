@@ -125,13 +125,38 @@ async fn get_available_hunts(access_token: &str) -> Result<String, String> {
     let response = client
         .from("hunts")
         .auth(access_token)
-        .select("*")
+        .select("*, pokemon(name, sprites)")
         .execute().await
         .map_err(|e| e.to_string())?;
 
     let body = response.text().await.map_err(|e| e.to_string())?;
 
-    Ok(body)
+    let parsed: Vec<serde_json::Value> = serde_json::from_str(&body).map_err(|e| e.to_string())?;
+
+    let formatted_hunts: Vec<serde_json::Value> = parsed
+        .into_iter()
+        .map(|hunt| {
+            let pokemon = hunt["pokemon"].as_object().unwrap();
+            let sprites = &pokemon["sprites"];
+            let chosen_sprite = sprites["front_default"].as_str().unwrap_or("");
+
+            json!({
+                "id": hunt["id"],
+                "user_id": hunt["user_id"],
+                "pokemon_id": hunt["pokemon_id"],
+                "count": hunt["count"],
+                "is_successful": hunt["is_successful"],
+                "created_at": hunt["created_at"],
+                "updated_at": hunt["updated_at"],
+                "increment_keybind": hunt["increment_keybind"],
+                "decrement_keybind": hunt["decrement_keybind"],
+                "pokemon_name": pokemon["name"],
+                "pokemon_sprite": chosen_sprite
+            })
+        })
+        .collect();
+
+    Ok(serde_json::to_string(&formatted_hunts).map_err(|e| e.to_string())?)
 }
 
 #[tauri::command]

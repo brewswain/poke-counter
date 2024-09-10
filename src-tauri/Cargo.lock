@@ -77,6 +77,8 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-deep-link",
  "tauri-plugin-oauth",
+ "tokio",
+ "uuid",
 ]
 
 [[package]]

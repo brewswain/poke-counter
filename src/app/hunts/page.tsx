@@ -2,7 +2,7 @@
 
 import { useSearchStore } from "@/store/searchStore";
 import { SearchPokemon } from "@/types/interfaces";
-import { invoke } from "@tauri-apps/api";
+import { invoke } from "@tauri-apps/api/tauri";
 
 import { useEffect } from "react";
 
@@ -11,17 +11,18 @@ import PokemonDropdown from "@/components/pokemonList/PokemonDropdown";
 
 import AddHuntButton from "@/rust-components/AddHunt";
 import AvailableHunts from "@/rust-components/AvailableHunts";
-import { RustFunctions } from "@/rust-components/enums";
+import { useGetPokemonList } from "@/rust-components/hookWrappers/rustWrappers";
 
-const HuntsList = () => {
+const HuntsListPage = () => {
   const { clearSearchQuery, pokemonList, setPokemonList } = useSearchStore();
+  const getPokemonList = useGetPokemonList();
 
   useEffect(() => {
     const fetchData = async () => {
       if (pokemonList.length === 0) {
-        const response = await invoke<string>(RustFunctions.GetPokemonList);
-        const data: SearchPokemon[] = JSON.parse(response);
-        setPokemonList(data);
+        const response = await getPokemonList();
+
+        setPokemonList(response);
       }
     };
 
@@ -45,4 +46,4 @@ const HuntsList = () => {
   );
 };
 
-export default HuntsList;
+export default HuntsListPage;

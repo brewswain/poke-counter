@@ -10,7 +10,11 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { SearchInput } from "./SearchInput";
 
 const PokemonDropdown = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
   const {
     searchQuery,
     setSearchQuery,
@@ -47,8 +51,6 @@ const PokemonDropdown = () => {
       inputRef.current.focus();
     }
   }, [searchQuery]);
-  const [isOpen, setIsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -91,13 +93,6 @@ const PokemonDropdown = () => {
     [filteredResults, handlePokemonSelect],
   );
 
-  const renderCount = useRef(0);
-
-  useEffect(() => {
-    renderCount.current += 1;
-    console.log(`PokemonDropdown rendered ${renderCount.current} times`);
-  });
-
   return (
     <div className="relative w-[280px]" ref={dropdownRef}>
       <button
@@ -107,7 +102,10 @@ const PokemonDropdown = () => {
         <span className="capitalize">
           {selectedPokemon.name || "Choose your pokémon"}
         </span>
-        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+        <svg
+          className={`w-4 h-4 fill-current transition-all ${isOpen ? "rotate-180 " : ""}`}
+          viewBox="0 0 20 20"
+        >
           <path
             d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
             clipRule="evenodd"

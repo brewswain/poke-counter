@@ -53,6 +53,14 @@ export const useIncrementCount = () => {
   }) => incrementCount({ huntId, count, accessToken, increment: true });
 };
 
+export const useGetPokemonList = () => {
+  const getPokemonList = useRust(RustFunctions.GetPokemonList);
+  return async () => {
+    const result = await getPokemonList();
+    return result;
+  };
+};
+
 export const useGetPokemonDetails = () => {
   const getPokemonDetails = useRust(RustFunctions.GetPokemon);
 

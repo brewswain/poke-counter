@@ -200,6 +200,8 @@ async fn add_new_hunt(
     user_id: &str,
     pokemon_id: &str,
     access_token: &str,
+    name: &str,
+    sprite: &str
 ) -> Result<String, String> {
     let client = initialize_client();
     let hunt_id = Uuid::new_v4().to_string();
@@ -207,6 +209,8 @@ async fn add_new_hunt(
     let new_hunt = json!({
         "id": hunt_id,
         "user_id": user_id,
+        "name": name,
+        "sprite": sprite,
         "pokemon_id": pokemon_id.parse::<i32>().unwrap_or(0),
         "count": 0,
         "is_successful": null,
@@ -222,19 +226,43 @@ async fn add_new_hunt(
 
     // Clone access_token and new_hunt for use in the async closure
     let access_token = access_token.to_string();
-    let new_hunt_clone = new_hunt.clone();
 
-    // Asynchronously add the hunt to Supabase
-    tokio::spawn(async move {
-        let _ = client
-            .from("hunts")
-            .auth(&access_token)
-            .insert(new_hunt_clone.to_string())
-            .execute()
-            .await;
-    });
 
-    Ok(serde_json::to_string(&new_hunt).map_err(|e| e.to_string())?)
+    let hunt_supabase_payload = json!({
+        "id": hunt_id,
+        "user_id": user_id,
+        "pokemon_id": pokemon_id.parse::<i32>().unwrap_or(0),
+        "count": 0,
+        "is_successful": null,
+        "created_at": Utc::now().to_rfc3339(),
+        "updated_at": Utc::now().to_rfc3339(),
+        "increment_keybind": ["ArrowUp"],
+        "decrement_keybind": ["ArrowDown"]
+    }).to_string();
+
+    // // Asynchronously add the hunt to Supabase
+    // tokio::spawn(async move {
+    //     let _ = client
+    //         .from("hunts")
+    //         .auth(&access_token)
+    //         .insert(new_hunt_clone.to_string())
+    //         .execute()
+    //         .await;
+    // });
+
+    // Ok(serde_json::to_string(&new_hunt).map_err(|e| e.to_string())?)
+
+        let response = client
+        .from("hunts")
+        .auth(access_token)
+        .insert(hunt_supabase_payload)
+        .execute()
+        .await
+        .map_err(|e| e.to_string())?;
+
+    let body = response.text().await.map_err(|e| e.to_string())?;
+
+    Ok(body)
 
     // let json_value = json!({
     //     "user_id": user_id,

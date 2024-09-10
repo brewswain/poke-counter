@@ -45,10 +45,15 @@ const AvailableHunts = () => {
         const cachedHunts = localStorage.getItem("availableHunts");
         if (cachedHunts) {
           setHunts(JSON.parse(cachedHunts));
-        } else {
-          const data = await getHunts({
-            accessToken: session.access_token,
-          });
+        }
+
+        // Always fetch from the database
+        const data = await getHunts({
+          accessToken: session.access_token,
+        });
+
+        // Update state and localStorage if new data is different
+        if (JSON.stringify(data) !== cachedHunts) {
           setHunts(data);
           localStorage.setItem("availableHunts", JSON.stringify(data));
         }

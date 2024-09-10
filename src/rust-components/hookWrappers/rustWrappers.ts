@@ -8,11 +8,15 @@ export const useAddHunt = () => {
     userId,
     pokemonId,
     accessToken,
+    name,
+    sprite,
   }: {
     userId: string;
     pokemonId: string;
     accessToken: string;
-  }) => addHunt({ userId, pokemonId, accessToken });
+    name: string;
+    sprite: string;
+  }) => addHunt({ userId, pokemonId, accessToken, name, sprite });
 };
 
 export const useGetAvailableHunts = () => {

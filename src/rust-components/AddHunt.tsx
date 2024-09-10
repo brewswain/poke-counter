@@ -27,9 +27,18 @@ const AddHuntButton = () => {
           userId: user.id,
           pokemonId: selectedPokemon.pokemon_id,
           accessToken: session.access_token,
+          sprite: selectedPokemon.sprite,
+          name: selectedPokemon.name,
         });
 
+        console.log({ data });
         if (data[0].id) {
+          const cachedHunts = JSON.parse(
+            localStorage.getItem("availableHunts") || "[]",
+          );
+          cachedHunts.push(data[0]);
+          localStorage.setItem("availableHunts", JSON.stringify(cachedHunts));
+
           router.push(
             `/hunt-details?huntId=${data[0].id}&pokemonId=${selectedPokemon.pokemon_id}`,
           );
